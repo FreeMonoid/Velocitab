@@ -42,6 +42,12 @@ public class Settings {
     private Map<String, List<String>> serverGroups = Map.of("default", List.of("lobby1", "lobby2", "lobby3"));
 
     @Getter
+    @YamlKey("server_display_names")
+    @YamlComment("Define custom names to be shown in the TAB list for specific server names.\n" +
+                 "If no custom display name is provided for a server, its original name will be used.")
+    private Map<String, String> serverDisplayNames = Map.of("very-long-server-name", "VLSN");
+
+    @Getter
     @YamlKey("fallback_enabled")
     @YamlComment("All servers which are not in other groups will be put in the fallback group.\n\"false\" will exclude them from Velocitab.")
     private boolean fallbackEnabled = true;
@@ -108,6 +114,17 @@ public class Settings {
     public String getFormat(@NotNull String serverGroup) {
         return StringEscapeUtils.unescapeJava(
                 formats.getOrDefault(serverGroup, "%username%"));
+    }
+
+    /**
+     * Get display name for the server
+     *
+     * @param serverName The server name
+     * @return The display name, or the server name if no display name is defined
+     */
+    @NotNull
+    public String getServerDisplayName(@NotNull String serverName) {
+        return serverDisplayNames.getOrDefault(serverName, serverName);
     }
 
     /**
